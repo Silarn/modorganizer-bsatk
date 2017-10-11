@@ -17,25 +17,16 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-
-#include "bsaexception.h"
+#include "bsatk/bsaexception.h"
 #include <cstdarg>
 #include <stdio.h>
 
-#pragma warning( disable : 4996 )
-
-std::string makeString(const char *format, ...)
-{
-  va_list argList;
-  va_start(argList, format);
-  char buffer[1024];
-  vsnprintf(buffer, 1024, format, argList);
-  return std::string(buffer);
+std::string makeString(const char* format, ...) {
+    va_list argList;
+    va_start(argList, format);
+    char buffer[1024];
+    vsnprintf(buffer, 1024, format, argList);
+    return std::string(buffer);
 }
 
-
-data_invalid_exception::data_invalid_exception(const std::string &message)
-  : m_Message(message)
-{
-}
+data_invalid_exception::data_invalid_exception(const std::string& message) : m_Message(message) {}

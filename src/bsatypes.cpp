@@ -17,60 +17,40 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-#include "bsatypes.h"
-#include <fstream>
-#include <string>
+#include "bsatk/bsatypes.h"
+#include <algorithm>
 #include <climits>
 #include <cstring>
-#include <algorithm>
-
+#include <fstream>
+#include <string>
 
 using std::fstream;
 
-
-/*#ifndef MAX_PATH
-#define MAX_PATH PATH_MAX
-#endif // MAX_PATH
-*/
-
-std::string readBString(fstream &file)
-{
-  unsigned char length = readType<unsigned char>(file);
-  char buffer[256];
-  if (length > 0) {
-    if (!file.read(buffer, length)) {
-      throw data_invalid_exception("can't read from bsa");
+std::string readBString(fstream& file) {
+    unsigned char length = readType<unsigned char>(file);
+    char buffer[256];
+    if (length > 0) {
+        if (!file.read(buffer, length)) {
+            throw data_invalid_exception("can't read from bsa");
+        }
     }
-  }
-  buffer[length] = '\0';
-  return std::string(buffer);
+    buffer[length] = '\0';
+    return std::string(buffer);
 }
 
-
-void writeBString(fstream &file, const std::string &string)
-{
-  unsigned int length
-      = std::min<unsigned int>(static_cast<unsigned int>(string.length()), 255);
-  writeType<unsigned char>(file, length + 1);
-  file.write(string.c_str(), length + 1);
+void writeBString(fstream& file, const std::string& string) {
+    unsigned char length = static_cast<unsigned char>(std::min<std::size_t>(string.length(), 255));
+    writeType<unsigned char>(file, length + 1);
+    file.write(string.c_str(), length + 1);
 }
 
-
-std::string readZString(fstream &file)
-{
-  char buffer[FILENAME_MAX];
-  memset(buffer, '\0', FILENAME_MAX);
-  if (!file.getline(buffer, FILENAME_MAX, '\0')) {
-    throw data_invalid_exception("can't read from bsa");
-  }
-  return std::string(buffer);
+std::string readZString(fstream& file) {
+    char buffer[FILENAME_MAX];
+    memset(buffer, '\0', FILENAME_MAX);
+    if (!file.getline(buffer, FILENAME_MAX, '\0')) {
+        throw data_invalid_exception("can't read from bsa");
+    }
+    return std::string(buffer);
 }
 
-
-void writeZString(fstream &file, const std::string &string)
-{
-  file.write(string.c_str(), string.length() + 1);
-}
-
-
+void writeZString(fstream& file, const std::string& string) { file.write(string.c_str(), string.length() + 1); }
